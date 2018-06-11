@@ -13,7 +13,7 @@ namespace Server.Controllers
     [Route("Handmade/[controller]")]
     public class Auth : Controller
     {
-        ConnectionString connectionString = new ConnectionString(){
+        readonly ConnectionString _connectionString = new ConnectionString(){
             Mode= FileMode.Exclusive,
             Filename = "Hasani.db"
         };
@@ -33,9 +33,8 @@ namespace Server.Controllers
 
             try
             {
-               
-               
-                using (var db = new LiteDatabase(connectionString))
+                   
+                using (var db = new LiteDatabase(_connectionString))
                 {
                     
                     var users = db.GetCollection<User>("Users");
@@ -82,11 +81,11 @@ namespace Server.Controllers
                 var from = HttpContext.Request.Form;
                 var userName = from["UserName"];
                 var mail = from["Mail"];
-                var PhoneNumber = from["PhoneNumber"];
+                var phoneNumber = from["PhoneNumber"];
                 var passWord = from["PassWord"];
 
 
-                using(var db= new LiteDatabase(connectionString)){
+                using(var db= new LiteDatabase(_connectionString)){
                     
                     var users = db.GetCollection<User>("users");
                     if(users.Exists(u=>u.UserName == userName)){
@@ -101,7 +100,7 @@ namespace Server.Controllers
                         {
                             UserName = userName,
                             Mail = mail,
-                            PhoneNumebr = PhoneNumber,
+                            PhoneNumebr = phoneNumber,
                             PassWord=passWord
                         });
                         jObject["Result"] = "Registeration in success";
@@ -123,6 +122,17 @@ namespace Server.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {
+            try
+            {
+                var form = HttpContext.Request.Form;
+                var userName = form["UserName"];
+                var editMode = form["editMode"];//mail , name , password
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                
+            }
         }
 
         // DELETE api/values/5
