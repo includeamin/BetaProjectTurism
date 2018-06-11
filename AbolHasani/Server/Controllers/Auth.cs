@@ -75,7 +75,7 @@ namespace Server.Controllers
 
         [Route("/Verify")]
         [HttpGet("{username}/{code}")]
-        public void Verify(string username,int code)
+        public JObject Verify(string username,int code)
         {
             JObject result = new JObject();
             try
@@ -89,6 +89,7 @@ namespace Server.Controllers
                     {
                         result["Result"] = "This code is used .";
                         result["Code"] = 0;
+                        return result;
 
                     }
                     else
@@ -102,11 +103,13 @@ namespace Server.Controllers
                             users.Update(user);
                             result["Result"] = "user verifivation is success.";
                             result["Code"] = 1;
+                            return result;
                         }
                         else
                         {
                             result["Result"] = "user verifivation is Faild : wrong code.";
                             result["Code"] = 0;
+                            return result;
 
                         }
                     }
@@ -117,7 +120,10 @@ namespace Server.Controllers
             catch (Exception e)
             {
                 Console.WriteLine($"Verifing user faild :{e.Message}");
-                
+                result["Result"] = "user verifivation is Faild : wrong code.";
+                result["Code"] = 0;
+                return result;
+
             }
         }
 
@@ -166,6 +172,7 @@ namespace Server.Controllers
                             Code = Tools.SendVerifingCodeViaMail(userName,mail),
                             IsVerified = false
                         });
+                        Tools.SendVerifingCodeViaMail(userName, mail);
                         jObject["Result"] = $"Registeration in success , code send to this mail {mail}";
                         jObject["Code"] =1;
                         Console.WriteLine($"Registeration in success ,username: {userName} code send to this mail {mail}");
