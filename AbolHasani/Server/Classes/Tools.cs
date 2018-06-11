@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
+
+
 namespace Server.Classes
 {
     public static class Tools
@@ -30,7 +32,7 @@ namespace Server.Classes
             //var htmlContent = $"<strong>{code}</strong>";
             //var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             //var response =  client.SendEmailAsync(msg);
-            MailMessage Mail = new MailMessage();
+        /*    MailMessage Mail = new MailMessage();
             SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
             var code = GenerateCode();
             Mail.From = new MailAddress("handmade.development@gmail.com");
@@ -38,11 +40,19 @@ namespace Server.Classes
             Mail.Subject = "VeryFing code";
             Mail.Body = code.ToString();
 
-            SmtpServer.Port = 587;
+            SmtpServer.Port = 465;
             SmtpServer.Credentials = new System.Net.NetworkCredential("handmade.development@gmail.com", "Mygmail44");
-            SmtpServer.EnableSsl = false;
+            SmtpServer.EnableSsl = tru;
 
-            SmtpServer.Send(Mail);
+            SmtpServer.Send(Mail);*/
+            var code = GenerateCode();
+            var client = new SmtpClient("smtp.gmail.com", 587)
+            {
+                Credentials = new System.Net.NetworkCredential("handmade.development@gmail.com", "Mygmail44"),
+                EnableSsl = true
+            };
+            client.Send(mail, mail, "Verifing user", code.ToString());
+           
 
             return code;
         }

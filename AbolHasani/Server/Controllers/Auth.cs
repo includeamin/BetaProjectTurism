@@ -19,12 +19,23 @@ namespace Server.Controllers
             Mode= FileMode.Exclusive,
             Filename = "Hasani.db"
         };
-       
+        public LiteDatabase db;
+        public Auth()
+        {
+           db = new LiteDatabase(_connectionString);
+        }
+
         // GET: LoginUsers
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<User> Get()
         {
-            return new string[] { "value1", "value2" };
+            using (var db = new LiteDatabase(_connectionString))
+            {
+
+                var users = db.GetCollection<User>("Users");
+                var temp = users.FindAll();
+                return temp;
+            }
         }
 
         // GET Login User with username password
@@ -61,6 +72,7 @@ namespace Server.Controllers
                         jObject["Code"] = 0;
                         return jObject;
                     }
+
                 }
             }
             catch (Exception ex)
@@ -73,14 +85,15 @@ namespace Server.Controllers
             }
         }
 
-        [Route("/Verify")]
-        [HttpGet("{username}/{code}")]
+        //[Route("Handmade/[controller]/Verify")]
+        [HttpPost("{username}/{code}")]
         public JObject Verify(string username,int code)
         {
             JObject result = new JObject();
             try
             {
-                using (var db = new LiteDatabase("Hasani.db"))
+                int temp;
+                using (var db = new LiteDatabase(_connectionString))
                 {
                     var codes = db.GetCollection<Verify>("Codes");
                     var users = db.GetCollection<User>("Users");
@@ -94,6 +107,7 @@ namespace Server.Controllers
                     }
                     else
                     {
+                        temp = tempcode.Code;
                         if (tempcode.Code == code)
                         {
                             tempcode.IsVerified = true;
@@ -107,7 +121,7 @@ namespace Server.Controllers
                         }
                         else
                         {
-                            result["Result"] = "user verifivation is Faild : wrong code.";
+                            result["Result"] = $"user verifivation is Faild : wrong code.[{code}]-[{temp}]";
                             result["Code"] = 0;
                             return result;
 
@@ -120,7 +134,7 @@ namespace Server.Controllers
             catch (Exception e)
             {
                 Console.WriteLine($"Verifing user faild :{e.Message}");
-                result["Result"] = "user verifivation is Faild : wrong code.";
+                result["Result"] = $"user verifivation is Faild : {e.Message}";
                 result["Code"] = 0;
                 return result;
 
@@ -166,14 +180,15 @@ namespace Server.Controllers
                             codes.Delete(c => c.UserName == userName);
                             
                         }
+                        int temp = Tools.SendVerifingCodeViaMail(userName, mail);
                         codes.Insert(new Verify()
                         {
                             UserName = userName,
-                            Code = Tools.SendVerifingCodeViaMail(userName,mail),
+                            Code = temp,
                             IsVerified = false
                         });
                         Tools.SendVerifingCodeViaMail(userName, mail);
-                        jObject["Result"] = $"Registeration in success , code send to this mail {mail}";
+                        jObject["Result"] = $"Registeration in success , code send to this mail {temp} - {mail}";
                         jObject["Code"] =1;
                         Console.WriteLine($"Registeration in success ,username: {userName} code send to this mail {mail}");
                         return jObject;
