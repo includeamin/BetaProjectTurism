@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using LiteDB;
 using Newtonsoft.Json.Linq;
+using Server.Classes;
+using Server.DbClass;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -71,6 +73,54 @@ namespace Server.Controllers
             }
         }
 
+        [Route("/Verify")]
+        [HttpGet("{username}/{code}")]
+        public void Verify(string username,int code)
+        {
+            JObject result = new JObject();
+            try
+            {
+                using (var db = new LiteDatabase("Hasani.db"))
+                {
+                    var codes = db.GetCollection<Verify>("Codes");
+                    var users = db.GetCollection<User>("Users");
+                    var tempcode = codes.FindOne(c => c.UserName == username);
+                    if (tempcode.IsVerified)
+                    {
+                        result["Result"] = "This code is used .";
+                        result["Code"] = 0;
+
+                    }
+                    else
+                    {
+                        if (tempcode.Code == code)
+                        {
+                            tempcode.IsVerified = true;
+                            codes.Update(tempcode);
+                            var user = users.FindOne(u => u.UserName == username);
+                            user.IsActive = true;
+                            users.Update(user);
+                            result["Result"] = "user verifivation is success.";
+                            result["Code"] = 1;
+                        }
+                        else
+                        {
+                            result["Result"] = "user verifivation is Faild : wrong code.";
+                            result["Code"] = 0;
+
+                        }
+                    }
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Verifing user faild :{e.Message}");
+                
+            }
+        }
+
         // POST api/values
         [HttpPost]
         public JObject Post()
@@ -88,6 +138,7 @@ namespace Server.Controllers
                 using(var db= new LiteDatabase(_connectionString)){
                     
                     var users = db.GetCollection<User>("users");
+                    var codes = db.GetCollection<Verify>("Codes");
                     if(users.Exists(u=>u.UserName == userName)){
                         Console.WriteLine($"username exist");
                        
@@ -101,10 +152,23 @@ namespace Server.Controllers
                             UserName = userName,
                             Mail = mail,
                             PhoneNumebr = phoneNumber,
-                            PassWord=passWord
+                            PassWord=passWord,
+                            IsActive = false
                         });
-                        jObject["Result"] = "Registeration in success";
+                        if (codes.Exists(c => c.UserName == userName))
+                        {
+                            codes.Delete(c => c.UserName == userName);
+                            
+                        }
+                        codes.Insert(new Verify()
+                        {
+                            UserName = userName,
+                            Code = Tools.SendVerifingCodeViaMail(userName,mail),
+                            IsVerified = false
+                        });
+                        jObject["Result"] = $"Registeration in success , code send to this mail {mail}";
                         jObject["Code"] =1;
+                        Console.WriteLine($"Registeration in success ,username: {userName} code send to this mail {mail}");
                         return jObject;
                     }
 
@@ -117,6 +181,8 @@ namespace Server.Controllers
                 return jObject;
             }
         }
+
+
 
         // PUT api/values/5
         [HttpPut("{id}")]

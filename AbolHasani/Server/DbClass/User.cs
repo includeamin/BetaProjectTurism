@@ -11,6 +11,7 @@ namespace Server
         public string Mail {get; set;  }
         public string PhoneNumebr { get; set; }
         public string PassWord { set; get; }
+        public bool IsActive { set; get; }
 
 
 
