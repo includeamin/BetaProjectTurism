@@ -74,7 +74,7 @@ namespace Server.Controllers
 
         // POST api/values
         [HttpPost]
-        public JObject Post([FromBody]string value)
+        public JObject Post()
         {
             JObject jObject = new JObject();
             try{
