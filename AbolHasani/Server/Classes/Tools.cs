@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
@@ -7,6 +8,9 @@ using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore;
 
 using LiteDB;
+using Server.Controllers;
+using Server.DbClass;
+using FileMode = LiteDB.FileMode;
 
 namespace Server.Classes
 {
@@ -14,7 +18,7 @@ namespace Server.Classes
     {
         readonly static ConnectionString _connectionString = new ConnectionString()
         {
-            Mode = FileMode.Exclusive,
+            Mode = FileMode.Shared,
             Filename = "Hasani.db"
         };
         public static int GenerateCode()
@@ -67,10 +71,29 @@ namespace Server.Classes
             temp["Result"] = message;
             return temp;
         }
-        public static void SaveFileToSafeDir(string FileID ,Microsoft.AspNetCore.Http.IFormFile file){
+        public static void SaveFileToSafeDir(string fileId,string title ,Microsoft.AspNetCore.Http.IFormFile file){
+            
+            var stream = file.OpenReadStream();
+           
+            var temp = DateTime.Now.DayOfYear+DateTime.Now.Millisecond.ToString() + file.FileName;
+        
+            var filePath = Path.Combine("./UploadedFiles",temp);
+            
+            FileStream amin = new FileStream(filePath, System.IO.FileMode.CreateNew);
 
-          //adding upload tools here 
-            //when upload sent name to database
+            stream.CopyTo(amin);
+            using (var db = new LiteDatabase(_connectionString))
+            {
+                Console.WriteLine(title);
+                var places = db.GetCollection<Location>("Locations");
+                var place = places.FindOne(t => t.Title == title);
+                place.ImagesList.Add(temp);
+                places.Update(place);
+
+
+            }
+
+         
         }
     }
 }

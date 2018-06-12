@@ -16,7 +16,7 @@ namespace Server.DbClass
         public double Star { set; get; }
         public string State { get; set; }
         public string City { get; set; }
-        
+        public List<string> ImagesList { set; get; }
 
     }
 }

@@ -20,40 +20,44 @@ namespace Server.Controllers
     {
         readonly ConnectionString _connectionString = new ConnectionString()
         {
-            Mode = LiteDB.FileMode.Exclusive,
+            Mode = LiteDB.FileMode.Shared,
             Filename = "Hasani.db"
         };
       
        
         // GET: api/values
         [HttpGet]
-        public HttpResponseMessage Get()
+        public IEnumerable<Location> Get()
         {
 
-            var db = new LiteDatabase(_connectionString);
-            var data =  db.FileStorage.Find("KingAmin");
-            var stream1 = data.First().OpenRead();
-            byte[] bytes = new byte[stream1.Length];
-            stream1.Read(bytes, 0, (int)stream1.Length);
-
-
-            var stream = new MemoryStream(bytes);
-            // processing the stream.
-
-
-            var result = new HttpResponseMessage(HttpStatusCode.OK)
+            using (var db = new LiteDatabase(_connectionString))
             {
-                Content = new ByteArrayContent(stream.ToArray())
-            };
-            result.Content.Headers.ContentDisposition =
-                new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment")
-                {
-                    FileName = data.First().Filename
-                };
-            result.Content.Headers.ContentType =
-                new MediaTypeHeaderValue("application/octet-stream");
+                return db.GetCollection<Location>("Locations").FindAll();
+            }
+            //var db = new LiteDatabase(_connectionString);
+            //var data =  db.FileStorage.Find("KingAmin");
+            //var stream1 = data.First().OpenRead();
+            //byte[] bytes = new byte[stream1.Length];
+            //stream1.Read(bytes, 0, (int)stream1.Length);
 
-            return result;
+
+            //var stream = new MemoryStream(bytes);
+            //// processing the stream.
+
+
+            //var result = new HttpResponseMessage(HttpStatusCode.OK)
+            //{
+            //    Content = new ByteArrayContent(stream.ToArray())
+            //};
+            //result.Content.Headers.ContentDisposition =
+            //    new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment")
+            //    {
+            //        FileName = data.First().Filename
+            //    };
+            //result.Content.Headers.ContentType =
+            //    new MediaTypeHeaderValue("application/octet-stream");
+
+            //return result;
         }
 
         // GET api/values/5
@@ -72,34 +76,34 @@ namespace Server.Controllers
                 var form = HttpContext.Request.Form;
                 var lat = form["Lat"];
                 var Long = form["Long"];
-                var Title = form["Title"];
-                var Description = form["Description"];
-                var Files = form.Files;
-                var file = Files[0];
+                var title = form["Title"];
+                var description = form["Description"];
+                var files = form.Files;
+                var file = files[0];
                 //  Tools.SaveFileToSafeDir(Title, file);
-                var stream = file.OpenReadStream();
+             //   var stream = file.OpenReadStream();
                
 
-
+               // Tools.SaveFileToSafeDir(title,title,file);
 
                 Console.WriteLine($"{file.FileName}-{file.ContentType}");
 
 
 
-                var carpath = Directory.GetCurrentDirectory();
+                //var carpath = Directory.GetCurrentDirectory();
               
                
-                Console.WriteLine(carpath);
-                var uploads = Path.Combine(carpath ,"UploadedFile");
+                //Console.WriteLine(carpath);
+                //var uploads = Path.Combine(carpath ,"UploadedFile");
 
 
-                var filePath = Path.Combine("./UploadedFiles", file.FileName);
+                //var filePath = Path.Combine("./UploadedFiles", file.FileName);
 
-                Console.WriteLine(filePath);
+                //Console.WriteLine(filePath);
 
-                FileStream amin = new FileStream(filePath, System.IO.FileMode.CreateNew);
+                //FileStream amin = new FileStream(filePath, System.IO.FileMode.CreateNew);
 
-                stream.CopyTo(amin);
+                //stream.CopyTo(amin);
 
 
               
@@ -111,7 +115,7 @@ namespace Server.Controllers
                 {
                   //  db.FileStorage.Upload(Title,"amin.png", stream);
                     var locations = db.GetCollection<Location>("Locations");
-                    if (locations.Exists(L => L.Title == Title))
+                    if (locations.Exists(L => L.Title == title))
                     {
 
                         return Tools.Result(0, "Location with this title is exist");
@@ -123,10 +127,15 @@ namespace Server.Controllers
                         {
                             Lat = Convert.ToDouble(lat),
                             Long = Convert.ToDouble(Long),
-                            Title = Title,
-                            Description = Description
+                            Title = title,
+                            Description = description,
+                            ImagesList = new List<string>(),
+                            Comments = new List<Comment>()
+                            
                     });
-                    return Tools.Result(1, "Location  Added");
+                        Tools.SaveFileToSafeDir(title, title, file);
+
+                        return Tools.Result(1, "Location  Added");
                 }
             }
             }
