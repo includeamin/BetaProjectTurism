@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore;
 
-
-
+using LiteDB;
 
 namespace Server.Classes
 {
     public static class Tools
     {
+        readonly static ConnectionString _connectionString = new ConnectionString()
+        {
+            Mode = FileMode.Exclusive,
+            Filename = "Hasani.db"
+        };
         public static int GenerateCode()
         {
             int _min = 1000;
@@ -54,6 +60,18 @@ namespace Server.Classes
            
 
             return code;
+        }
+        public static JObject Result(int code , string message){
+            var temp = new JObject();
+            temp["Code"] = code;
+            temp["Result"] = message;
+            return temp;
+        }
+        public static void SaveFileToSafeDir(string FileID ,Microsoft.AspNetCore.Http.IFormFile file){
+
+            using(var db = new LiteDatabase(_connectionString)){
+                //db.FileStorage(FileID, file.OpenReadStream);
+            }
         }
     }
 }

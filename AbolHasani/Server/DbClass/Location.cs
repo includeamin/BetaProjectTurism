@@ -5,14 +5,17 @@ using System.Threading.Tasks;
 
 namespace Server.DbClass
 {
-    public class Place
+    public class Location
     {
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string Location { set; get; }
+        public double Lat { set; get; }
+        public double Long { set; get; }
         public List<Comment> Comments { get; set; }
-        public int Star { set; get; }
+        public double Star { set; get; }
+        public string State { get; set; }
+        public string City { get; set; }
         
 
     }

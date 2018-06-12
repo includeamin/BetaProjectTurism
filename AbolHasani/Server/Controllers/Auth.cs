@@ -187,7 +187,7 @@ namespace Server.Controllers
                             Code = temp,
                             IsVerified = false
                         });
-                        Tools.SendVerifingCodeViaMail(userName, mail);
+                      //  Tools.SendVerifingCodeViaMail(userName, mail);
                         jObject["Result"] = $"Registeration in success , code send to this mail {temp} - {mail}";
                         jObject["Code"] =1;
                         Console.WriteLine($"Registeration in success ,username: {userName} code send to this mail {mail}");
