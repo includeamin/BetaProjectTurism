@@ -69,9 +69,8 @@ namespace Server.Classes
         }
         public static void SaveFileToSafeDir(string FileID ,Microsoft.AspNetCore.Http.IFormFile file){
 
-            using(var db = new LiteDatabase(_connectionString)){
-                //db.FileStorage(FileID, file.OpenReadStream);
-            }
+          //adding upload tools here 
+            //when upload sent name to database
         }
     }
 }
