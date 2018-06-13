@@ -18,21 +18,17 @@ namespace Server.Controllers
     [Route("Handmade/[controller]")]
     public class Place : Controller
     {
-        readonly ConnectionString _connectionString = new ConnectionString()
-        {
-            Mode = LiteDB.FileMode.Exclusive,
-            Filename = "Hasani.db"
-        };
+       
       
        
         // GET: api/values
         [HttpGet]
         public IEnumerable<Location> Get()
         {
-                using (var db = new LiteDatabase(_connectionString))
-            {
-                         return db.GetCollection<Location>("Locations").FindAll();
-            }
+           // using (var db = new LiteDatabase(Tools._connectionString))
+           // {
+                return Tools.Database.GetCollection<Location>("Locations").FindAll();
+           // }
                
 
         }
@@ -63,10 +59,10 @@ namespace Server.Controllers
 
 
 
-                using (var db = new LiteDatabase(_connectionString))
-                {
+             //   using (var db = new LiteDatabase(Tools._connectionString))
+              //  {
                   
-                    var locations = db.GetCollection<Location>("Locations");
+                var locations = Tools.Database.GetCollection<Location>("Locations");
                     if (locations.Exists(L => L.Title == title))
                     {
 
@@ -93,7 +89,7 @@ namespace Server.Controllers
 
                         return Tools.Result(1, "Location  Added");
                 }
-            }
+          //  }
             }
             catch (Exception ex)
             {

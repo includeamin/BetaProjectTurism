@@ -15,27 +15,24 @@ namespace Server.Controllers
     [Route("Handmade/[controller]")]
     public class Auth : Controller
     {
-        readonly ConnectionString _connectionString = new ConnectionString(){
-            Mode= FileMode.Exclusive,
-            Filename = "Hasani.db"
-        };
+       
         public LiteDatabase db;
         public Auth()
         {
-           db = new LiteDatabase(_connectionString);
+            db = new LiteDatabase(Tools._connectionString);
         }
 
         // GET: LoginUsers
         [HttpGet]
         public IEnumerable<User> Get()
         {
-            using (var db = new LiteDatabase(_connectionString))
-            {
+            //using (var db = new LiteDatabase(Tools._connectionString))
+           // {
 
-                var users = db.GetCollection<User>("Users");
+                var users = Tools.Database.GetCollection<User>("Users");
                 var temp = users.FindAll();
                 return temp;
-            }
+            //}
         }
 
         // GET Login User with username password
@@ -47,10 +44,10 @@ namespace Server.Controllers
             try
             {
                    
-                using (var db = new LiteDatabase(_connectionString))
-                {
+              //  using (var db = new LiteDatabase(Tools._connectionString))
+              //  {
                     
-                    var users = db.GetCollection<User>("Users");
+                var users = Tools.Database.GetCollection<User>("Users");
                     if (users.Exists(u => u.UserName == username))
                     {
                         var user = users.FindOne(u => u.UserName == username);
@@ -73,7 +70,7 @@ namespace Server.Controllers
                         return jObject;
                     }
 
-                }
+             //   }
             }
             catch (Exception ex)
             {
@@ -93,10 +90,10 @@ namespace Server.Controllers
             try
             {
                 int temp;
-                using (var db = new LiteDatabase(_connectionString))
-                {
-                    var codes = db.GetCollection<Verify>("Codes");
-                    var users = db.GetCollection<User>("Users");
+             //   using (var db = new LiteDatabase(Tools._connectionString))
+              //  {
+                    var codes = Tools.Database.GetCollection<Verify>("Codes");
+                    var users = Tools.Database.GetCollection<User>("Users");
                     var tempcode = codes.FindOne(c => c.UserName == username);
                     if (tempcode.IsVerified)
                     {
@@ -128,7 +125,7 @@ namespace Server.Controllers
                         }
                     }
 
-                }
+              //  }
 
             }
             catch (Exception e)
@@ -155,10 +152,10 @@ namespace Server.Controllers
                 var passWord = from["PassWord"];
 
 
-                using(var db= new LiteDatabase(_connectionString)){
+            
                     
-                    var users = db.GetCollection<User>("users");
-                    var codes = db.GetCollection<Verify>("Codes");
+                    var users = Tools.Database.GetCollection<User>("users");
+                    var codes = Tools.Database.GetCollection<Verify>("Codes");
                     if(users.Exists(u=>u.UserName == userName)){
                         Console.WriteLine($"username exist");
                        
@@ -187,14 +184,14 @@ namespace Server.Controllers
                             Code = temp,
                             IsVerified = false
                         });
-                      //  Tools.SendVerifingCodeViaMail(userName, mail);
+
                         jObject["Result"] = $"Registeration in success , code send to this mail {temp} - {mail}";
                         jObject["Code"] =1;
                         Console.WriteLine($"Registeration in success ,username: {userName} code send to this mail {mail}");
                         return jObject;
                     }
 
-                }
+              
 
             }catch(Exception e){
                 Console.WriteLine($"error while registeration {e.Message}");
