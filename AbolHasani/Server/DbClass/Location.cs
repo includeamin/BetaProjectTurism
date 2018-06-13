@@ -12,7 +12,6 @@ namespace Server.DbClass
         public string Description { get; set; }
         public double Lat { set; get; }
         public double Long { set; get; }
-       
         public double Star { set; get; }
         public string State { get; set; }
         public string City { get; set; }
