@@ -71,6 +71,7 @@ namespace Server.Classes
         /// <param name="code">Code.</param>
         /// <param name="message">Message.</param>
         public static JObject Result(int code , string message){
+            
             var temp = new JObject();
             temp["Code"] = code;
             temp["Result"] = message;
@@ -84,16 +85,18 @@ namespace Server.Classes
         public static void SaveFileToSafeDir(string title ,Microsoft.AspNetCore.Http.IFormFile file){
             
             var stream = file.OpenReadStream();
+
            
             var temp = DateTime.Now.DayOfYear+DateTime.Now.Millisecond.ToString() + file.FileName;
         
             var filePath = Path.Combine("./UploadedFiles",temp);
             
-            FileStream amin = new FileStream(filePath, System.IO.FileMode.CreateNew);
+            FileStream amin = new FileStream(filePath, System.IO.FileMode.OpenOrCreate);
 
             stream.CopyTo(amin);
-          //  using (var db = new LiteDatabase(_connectionString))
-           // {
+            //  using (var db = new LiteDatabase(_connectionString))
+            // {
+                amin.Close();
                 Console.WriteLine(title);
                 var places = Database.GetCollection<Location>("Locations");
                 var place = places.FindOne(t => t.Title == title);

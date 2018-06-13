@@ -78,7 +78,7 @@ namespace Server.Controllers
                             Title = title,
                             Description = description,
                             ImagesList = new List<string>(),
-                            Comments = new List<Comment>()
+                            
                             
                     });
 
