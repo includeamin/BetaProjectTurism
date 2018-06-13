@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Web;
+using Server.Classes;
 
 namespace Server.Controllers
 {
@@ -16,12 +17,17 @@ namespace Server.Controllers
     [Route("Handmade/Download")]
     public class DownloadController : Controller
     {
+        /// <summary>
+        /// Get the specified filename.
+        /// </summary>
+        /// <returns>The get.</returns>
+        /// <param name="filename">Filename.</param>
         [HttpGet("{filename}")]
         public RedirectResult Get(string filename)
         {
             Console.WriteLine(filename);
 
-            return Redirect($"http://192.168.1.50:9001/?name={filename}");
+            return Redirect(Tools.DownloadServerURl+$"/?name={filename}");
         }
 
     }

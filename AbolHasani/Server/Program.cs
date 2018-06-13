@@ -7,7 +7,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-
+using Server.Classes;
 namespace Server
 {
     public class Program
@@ -20,7 +20,7 @@ namespace Server
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                   .UseUrls("http://[::]:9000/")
+                   .UseUrls(Tools.MainServerURL)
                    .Build()
                    ;
     }

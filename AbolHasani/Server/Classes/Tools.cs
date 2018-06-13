@@ -16,16 +16,25 @@ namespace Server.Classes
 {
     public static class Tools
     {
+
+        //URLS ========================================================
+        public readonly static string DownloadServerURl = "http://192.168.1.50:9001/";
+        public readonly static string MainServerURL = "http://[::]:9000/";
+
+        //DataBase Connection ==========================================
         public readonly static ConnectionString _connectionString = new ConnectionString()
         {
             Mode = FileMode.Exclusive,
             Filename = "Hasani.db"
         };
+
         public static LiteDatabase Database;
         static Tools()
         {
             Database = new LiteDatabase(_connectionString);
         }
+
+        //Other tools ===================================================
         public static int GenerateCode()
         {
             int _min = 1000;
@@ -33,7 +42,12 @@ namespace Server.Classes
             Random _rdm = new Random();
             return _rdm.Next(_min, _max);
         }
-
+        /// <summary>
+        /// Sends the verifing code via mail.
+        /// </summary>
+        /// <returns>The verifing code via mail.</returns>
+        /// <param name="userName">User name.</param>
+        /// <param name="mail">Mail.</param>
         public static int SendVerifingCodeViaMail(string userName, string mail)
         {
            
@@ -43,17 +57,30 @@ namespace Server.Classes
                 Credentials = new System.Net.NetworkCredential("handmade.development@gmail.com", "Mygmail44"),
                 EnableSsl = true
             };
+
             client.Send(mail, mail, "Verifing user", code.ToString());
            
 
             return code;
         }
+
+        /// <summary>
+        /// Result the specified code and message.
+        /// </summary>
+        /// <returns>The result.</returns>
+        /// <param name="code">Code.</param>
+        /// <param name="message">Message.</param>
         public static JObject Result(int code , string message){
             var temp = new JObject();
             temp["Code"] = code;
             temp["Result"] = message;
             return temp;
         }
+        /// <summary>
+        /// Saves the file to safe dir.
+        /// </summary>
+        /// <param name="title">Title.</param>
+        /// <param name="file">File.</param>
         public static void SaveFileToSafeDir(string title ,Microsoft.AspNetCore.Http.IFormFile file){
             
             var stream = file.OpenReadStream();
