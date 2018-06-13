@@ -71,7 +71,7 @@ namespace Server.Classes
             temp["Result"] = message;
             return temp;
         }
-        public static void SaveFileToSafeDir(string fileId,string title ,Microsoft.AspNetCore.Http.IFormFile file){
+        public static void SaveFileToSafeDir(string title ,Microsoft.AspNetCore.Http.IFormFile file){
             
             var stream = file.OpenReadStream();
            

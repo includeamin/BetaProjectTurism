@@ -29,35 +29,12 @@ namespace Server.Controllers
         [HttpGet]
         public IEnumerable<Location> Get()
         {
-
-            using (var db = new LiteDatabase(_connectionString))
+                using (var db = new LiteDatabase(_connectionString))
             {
-                return db.GetCollection<Location>("Locations").FindAll();
+                         return db.GetCollection<Location>("Locations").FindAll();
             }
-            //var db = new LiteDatabase(_connectionString);
-            //var data =  db.FileStorage.Find("KingAmin");
-            //var stream1 = data.First().OpenRead();
-            //byte[] bytes = new byte[stream1.Length];
-            //stream1.Read(bytes, 0, (int)stream1.Length);
+               
 
-
-            //var stream = new MemoryStream(bytes);
-            //// processing the stream.
-
-
-            //var result = new HttpResponseMessage(HttpStatusCode.OK)
-            //{
-            //    Content = new ByteArrayContent(stream.ToArray())
-            //};
-            //result.Content.Headers.ContentDisposition =
-            //    new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment")
-            //    {
-            //        FileName = data.First().Filename
-            //    };
-            //result.Content.Headers.ContentType =
-            //    new MediaTypeHeaderValue("application/octet-stream");
-
-            //return result;
         }
 
         // GET api/values/5
@@ -80,6 +57,7 @@ namespace Server.Controllers
                 var description = form["Description"];
                 var files = form.Files;
                 var file = files[0];
+
              
                 Console.WriteLine($"{file.FileName}-{file.ContentType}");
 
@@ -107,7 +85,11 @@ namespace Server.Controllers
                             Comments = new List<Comment>()
                             
                     });
-                        Tools.SaveFileToSafeDir(title, title, file);
+
+                       // Tools.SaveFileToSafeDir(title, title, file);
+                        foreach(var i in files){
+                            Tools.SaveFileToSafeDir(title, i);
+                        }
 
                         return Tools.Result(1, "Location  Added");
                 }

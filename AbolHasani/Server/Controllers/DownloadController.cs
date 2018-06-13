@@ -21,7 +21,7 @@ namespace Server.Controllers
         {
             Console.WriteLine(filename);
 
-            return Redirect($"http://192.168.1.52:9001/?name={filename}");
+            return Redirect($"http://192.168.1.50:9001/?name={filename}");
         }
 
     }
