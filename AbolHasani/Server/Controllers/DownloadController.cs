@@ -39,7 +39,8 @@ namespace Server.Controllers
             //return result;
             var response = new HttpResponseMessage(HttpStatusCode.OK);
             var stream = new System.IO.FileStream($"./UploadedFiles/{filename}", System.IO.FileMode.Open);
-            response.Content = new StreamContent(stream);
+            Console.WriteLine(stream.Length);
+            response.Content = new StreamContent(stream,(int) stream.Length);
             response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
 
             return response;
