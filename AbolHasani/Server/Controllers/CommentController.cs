@@ -21,9 +21,7 @@ namespace Server.Controllers
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/values/5
-      //  [HttpGet("{username}")]
-      
+    
         [HttpGet]
         [Route("usercomment/{username}")]
         [ActionName("GetUserComment")]
@@ -94,6 +92,7 @@ namespace Server.Controllers
                 if(!users.Exists(u=>u.UserName==userName)){
                     throw new Exception("Username not found for this username");
                 }
+
                 var tempComment = new Comment()
                 {
 
@@ -105,8 +104,8 @@ namespace Server.Controllers
                 };
 
               comments.Insert(tempComment);
-                return Tools.Result(1, "Comment Added");
-
+              return Tools.Result(1, "Comment Added");
+        
 
 
             }
@@ -125,8 +124,19 @@ namespace Server.Controllers
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public JObject Delete(string username,string commetToId)
         {
+           try
+            {
+                var comments = Tools.Database.GetCollection<Comment>("Comments");
+                comments.Delete(c => c.UserName == username && c.CommentToId == commetToId);
+                return Tools.Result(1, $"Comment deleted");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Delete commment faild :{ex.Message}");
+                return Tools.Result(0, $"deleation faild:{ex.Message}");
+            }
         }
     }
 }
