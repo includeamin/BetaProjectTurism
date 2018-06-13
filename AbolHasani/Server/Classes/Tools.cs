@@ -18,7 +18,7 @@ namespace Server.Classes
     {
         readonly static ConnectionString _connectionString = new ConnectionString()
         {
-            Mode = FileMode.Shared,
+            Mode = FileMode.Exclusive,
             Filename = "Hasani.db"
         };
         public static int GenerateCode()

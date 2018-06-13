@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Web;
 
 namespace Server.Controllers
 {
@@ -16,34 +17,11 @@ namespace Server.Controllers
     public class DownloadController : Controller
     {
         [HttpGet("{filename}")]
-        public HttpResponseMessage Get(string filename)
+        public RedirectResult Get(string filename)
         {
-            
-            // processing the stream.
-          //  var file = System.IO.File.OpenRead($"./UploadedFiles/{filename}");
-          //  byte[] bytes = new byte[file.Length];
-          //  var stream = new MemoryStream(bytes, 0, bytes.Length);
+            Console.WriteLine(filename);
 
-            //var result = new HttpResponseMessage(HttpStatusCode.OK)
-            //{
-            //    Content = new ByteArrayContent(stream.ToArray())
-            //};
-            //result.Content.Headers.ContentDisposition =
-            //    new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment")
-            //    {
-            //        FileName = filename
-            //    };
-            //result.Content.Headers.ContentType =
-            //    new MediaTypeHeaderValue("application/octet-stream");
-
-            //return result;
-            var response = new HttpResponseMessage(HttpStatusCode.OK);
-            var stream = new System.IO.FileStream($"./UploadedFiles/{filename}", System.IO.FileMode.Open);
-            Console.WriteLine(stream.Length);
-            response.Content = new StreamContent(stream,(int) stream.Length);
-            response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
-
-            return response;
+            return Redirect($"http://192.168.1.52:9001/?name={filename}");
         }
 
     }

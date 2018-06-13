@@ -18,7 +18,7 @@
     },
     "Server": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "hadnmade",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

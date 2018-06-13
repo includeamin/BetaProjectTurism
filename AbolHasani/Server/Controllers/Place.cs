@@ -20,7 +20,7 @@ namespace Server.Controllers
     {
         readonly ConnectionString _connectionString = new ConnectionString()
         {
-            Mode = LiteDB.FileMode.Shared,
+            Mode = LiteDB.FileMode.Exclusive,
             Filename = "Hasani.db"
         };
       
@@ -80,40 +80,14 @@ namespace Server.Controllers
                 var description = form["Description"];
                 var files = form.Files;
                 var file = files[0];
-                //  Tools.SaveFileToSafeDir(Title, file);
-             //   var stream = file.OpenReadStream();
-               
-
-               // Tools.SaveFileToSafeDir(title,title,file);
-
+             
                 Console.WriteLine($"{file.FileName}-{file.ContentType}");
-
-
-
-                //var carpath = Directory.GetCurrentDirectory();
-              
-               
-                //Console.WriteLine(carpath);
-                //var uploads = Path.Combine(carpath ,"UploadedFile");
-
-
-                //var filePath = Path.Combine("./UploadedFiles", file.FileName);
-
-                //Console.WriteLine(filePath);
-
-                //FileStream amin = new FileStream(filePath, System.IO.FileMode.CreateNew);
-
-                //stream.CopyTo(amin);
-
-
-              
-
 
 
 
                 using (var db = new LiteDatabase(_connectionString))
                 {
-                  //  db.FileStorage.Upload(Title,"amin.png", stream);
+                  
                     var locations = db.GetCollection<Location>("Locations");
                     if (locations.Exists(L => L.Title == title))
                     {
