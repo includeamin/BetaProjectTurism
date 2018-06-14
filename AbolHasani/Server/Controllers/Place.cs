@@ -52,16 +52,11 @@ namespace Server.Controllers
                 var title = form["Title"];
                 var description = form["Description"];
                 var files = form.Files;
-                var file = files[0];
+                var state = form["State"];
+                var city = form["City"];
+               
 
-             
-                Console.WriteLine($"{file.FileName}-{file.ContentType}");
-
-
-
-             //   using (var db = new LiteDatabase(Tools._connectionString))
-              //  {
-                  
+                     
                 var locations = Tools.Database.GetCollection<Location>("Locations");
                     if (locations.Exists(L => L.Title == title))
                     {
@@ -70,7 +65,6 @@ namespace Server.Controllers
                     }
                     else
                     {
-
                         locations.Insert(new Location()
                         {
                             Lat = Convert.ToDouble(lat),
@@ -82,14 +76,13 @@ namespace Server.Controllers
                             
                     });
 
-                       // Tools.SaveFileToSafeDir(title, title, file);
                         foreach(var i in files){
                             Tools.SaveFileToSafeDir(title, i);
                         }
 
                         return Tools.Result(1, "Location  Added");
                 }
-          //  }
+          
             }
             catch (Exception ex)
             {
