@@ -25,9 +25,9 @@ namespace Server.Controllers
         [HttpGet("{filename}")]
         public RedirectResult Get(string filename)
         {
-            Console.WriteLine(filename);
+            Console.WriteLine($"Download Image from client {filename}");
 
-            return Redirect(Tools.DownloadServerURl+$"/?name={filename}");
+            return Redirect(Tools.DownloadServerURl+$"?name={filename}");
         }
 
     }
