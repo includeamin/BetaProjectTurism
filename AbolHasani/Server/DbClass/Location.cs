@@ -16,6 +16,10 @@ namespace Server.DbClass
         public string State { get; set; }
         public string City { get; set; }
         public List<string> ImagesList { set; get; }
+        public int LikesCount { set; get; }
+        public List<string> UserLikedList { set; get; }
+        public bool IsLiked { get; set; }
+
 
     }
 }

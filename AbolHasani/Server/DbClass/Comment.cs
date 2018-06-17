@@ -10,8 +10,8 @@ namespace Server.DbClass
         public int Id { get; set; }
         public string LocationTitle { set; get; }
         public string UserName { get; set; }
-        public string Title { get; set; }
-        public string CommentToId { get; set; }
+      
+      
         public string Description { get; set; }
     }
 }

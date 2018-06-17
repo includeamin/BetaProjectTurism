@@ -30,14 +30,14 @@ namespace Server.Controllers
             try
             {
                 var comments = Tools.Database.GetCollection<Comment>("Comments");
-                var userComment = comments.Find(uc => uc.UserName == username);
+                var userComment = comments.Find(uc => uc.UserName.Equals(username));
                 return userComment;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Get users comment faild :{ex.Message}");
                 return new Comment[]{
-                    new Comment(){Title=$"{ex.Message}"}
+                    new Comment(){LocationTitle=$"{ex.Message}"}
                 };
             }
         }
@@ -50,14 +50,15 @@ namespace Server.Controllers
            try
             {
                 var comments = Tools.Database.GetCollection<Comment>("Comments");
-                var LocationComment = comments.Find(lc => lc.LocationTitle == locationTitle);
+                var LocationComment = comments.Find(lc => lc.LocationTitle.Equals(locationTitle));
+               
                 return LocationComment;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Get users comment faild :{ex.Message}");
                 return new Comment[]{
-                    new Comment(){Title=$"{ex.Message}"}
+                    new Comment(){LocationTitle=$"{ex.Message}"}
                 };
             }
         }
@@ -70,35 +71,33 @@ namespace Server.Controllers
 
             try
             {
-                var title = form["Title"];
+
                 var description = form["Description"];
-                var commentToId = form["CommentTo"];
                 var userName = form["UserName"];
-                var locationTitle = form["LocationTitle"];
+                var locationTitle = form["Title"];
+
+
 
                 if(userName==string.Empty){
                     throw new Exception("user name empty");
                 }
-                if(commentToId==string.Empty){
-                    throw new Exception("commentToId is empty");
+                if (locationTitle == string.Empty)
+                {
+                    throw new Exception("locationTitle empty");
                 }
-                if(title==string.Empty){
-                    throw new Exception("title is empty");
-                }
+             
 
 
                 var comments = Tools.Database.GetCollection<Comment>("Comments");
                 var users = Tools.Database.GetCollection<User>("Users");
-                if(!users.Exists(u=>u.UserName==userName)){
+                if(!users.Exists(u=>u.UserName.Equals(userName))){
                     throw new Exception("Username not found for this username");
                 }
 
                 var tempComment = new Comment()
                 {
 
-                    CommentToId = commentToId,
                     UserName = userName,
-                    Title = title,
                     Description = description,
                     LocationTitle = locationTitle
                 };
@@ -124,12 +123,12 @@ namespace Server.Controllers
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public JObject Delete(string username,string commetToId)
+        public JObject Delete(string username,string title)
         {
            try
             {
                 var comments = Tools.Database.GetCollection<Comment>("Comments");
-                comments.Delete(c => c.UserName == username && c.CommentToId == commetToId);
+                comments.Delete(c => c.UserName.Equals(username)&& c.LocationTitle.Equals(title));
                 return Tools.Result(1, $"Comment deleted");
             }
             catch (Exception ex)

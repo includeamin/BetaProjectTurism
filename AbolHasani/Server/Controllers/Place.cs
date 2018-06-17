@@ -29,15 +29,36 @@ namespace Server.Controllers
            // {
                 return Tools.Database.GetCollection<Location>("Locations").FindAll();
            // }
-               
 
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        // GET api/values/5[
+        [ActionName("GetLocationByusername")]
+        [HttpGet("{username}/{title}")]
+        public Location Get(string username,string title)
         {
-            return "value";
+            try
+            {
+                var locations = Tools.Database.GetCollection<Location>("Locations");
+
+                var TempLcoation = locations.FindOne(t => t.Title.Equals(title));
+
+                if(TempLcoation.UserLikedList.Exists(u=>u.Equals(username))){
+                    TempLcoation.IsLiked = true;
+                }
+
+
+
+                return TempLcoation;
+            }
+            catch (Exception ex)
+            {
+                return new Location()
+                {
+                    Title = ex.Message
+                };
+            }
+          
         }
 
         // POST api/values
@@ -58,7 +79,7 @@ namespace Server.Controllers
 
                      
                 var locations = Tools.Database.GetCollection<Location>("Locations");
-                    if (locations.Exists(L => L.Title == title))
+                if (locations.Exists(L => L.Title.Equals(title)))
                     {
 
                         return Tools.Result(0, "Location with this title is exist");
@@ -72,6 +93,7 @@ namespace Server.Controllers
                             Title = title,
                             Description = description,
                             ImagesList = new List<string>(),
+                            UserLikedList = new List<string>()
                             
                             
                     });
