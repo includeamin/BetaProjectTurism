@@ -18,8 +18,9 @@ namespace Server.Classes
     {
 
         //URLS ========================================================
-        public readonly static string DownloadServerURl = "http://192.168.1.52:9001/";
+        public readonly static string DownloadServerURl = "http://192.168.1.54:9001/";
         public readonly static string MainServerURL = "http://[::]:9000/";
+
 
         //DataBase Connection ==========================================
         public readonly static ConnectionString _connectionString = new ConnectionString()
@@ -28,6 +29,24 @@ namespace Server.Classes
             Filename = "Hasani.db"
         };
 
+        //Database collections name ====================================
+        public static string DbName = "Hasani.db";
+        public static string Locations = "Locations";
+        public static string Users = "Users";
+        public static string Comments = "Comments";
+
+
+        //Mail Configs =================================================
+        public static string MailAddress = "handmade.development@gmail.com";
+        public static string MailPassWord = "Mygmail44";
+        public static string StmpServer = "smtp.gmail.com";
+        public static int StmpServerPort = 587;
+
+
+
+
+
+
         public static LiteDatabase Database;
         static Tools()
         {
@@ -35,6 +54,7 @@ namespace Server.Classes
         }
 
         //Other tools ===================================================
+
         public static int GenerateCode()
         {
             int _min = 1000;
@@ -42,6 +62,7 @@ namespace Server.Classes
             Random _rdm = new Random();
             return _rdm.Next(_min, _max);
         }
+
         /// <summary>
         /// Sends the verifing code via mail.
         /// </summary>
@@ -52,9 +73,9 @@ namespace Server.Classes
         {
            
             var code = GenerateCode();
-            var client = new SmtpClient("smtp.gmail.com", 587)
+            var client = new SmtpClient(StmpServer, StmpServerPort)
             {
-                Credentials = new System.Net.NetworkCredential("handmade.development@gmail.com", "Mygmail44"),
+                Credentials = new System.Net.NetworkCredential(MailAddress, MailPassWord),
                 EnableSsl = true
             };
 

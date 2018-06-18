@@ -18,18 +18,11 @@ namespace Server.Controllers
     [Route("Handmade/[controller]")]
     public class Place : Controller
     {
-       
-      
-       
-        // GET: api/values
+           
         [HttpGet]
         public IEnumerable<Location> Get()
         {
-           // using (var db = new LiteDatabase(Tools._connectionString))
-           // {
-                return Tools.Database.GetCollection<Location>("Locations").FindAll();
-           // }
-
+            return Tools.Database.GetCollection<Location>("Locations").FindAll();
         }
 
         // GET api/values/5[

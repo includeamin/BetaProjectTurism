@@ -48,9 +48,9 @@ namespace Server.Controllers
               //  {
                     
                 var users = Tools.Database.GetCollection<User>("Users");
-                    if (users.Exists(u => u.UserName == username))
+                if (users.Exists(u => u.UserName .Equals(username)))
                     {
-                        var user = users.FindOne(u => u.UserName == username);
+                    var user = users.FindOne(u => u.UserName.Equals(username));
                         if (user.PassWord == password)
                         {
                             jObject["result"] = "User Login Success";

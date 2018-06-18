@@ -43,7 +43,7 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        [Route("locationcommnet/{locationTitle}")]
+        [Route("locationcomment/{locationTitle}")]
         [ActionName("LocationComment")]
         public IEnumerable<Comment> GetLocationComment(string locationTitle)
         {

@@ -22,7 +22,7 @@ namespace Server.Controllers
             var form = HttpContext.Request.Form;
             try
             {
-                var username = form["UserName"];
+                var username = form["UserName"];// should check thgis user in sexist or not
                 var ItemId = form["ItemId"]; // locations title
                 var Locations = Tools.Database.GetCollection<Location>("Locations");
                 var TempLocation = Locations.FindOne(l => l.Title.Equals((string)ItemId));
