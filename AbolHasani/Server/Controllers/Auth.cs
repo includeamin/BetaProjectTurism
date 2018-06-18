@@ -82,6 +82,35 @@ namespace Server.Controllers
             }
         }
 
+
+
+        [HttpGet]
+        [Route("getDetail/{username}/{password}")]
+        [ActionName("GetUserDetail")]
+        public User GetUserDetail(string userName , string passWord){
+
+            try
+            {
+                var user = Tools.Database.GetCollection<User>(Tools.Users).FindOne(u => u.UserName.Equals(userName));
+
+                if(!user.PassWord.Equals(passWord)){
+                    throw new Exception("password is wrong");
+                }
+
+                return user;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Getting user detail error : {ex.Message}");
+                return new User()
+                {
+                    UserName = ex.Message
+                };
+
+            }
+        }
+
         //[Route("Handmade/[controller]/Verify")]
         [HttpPost("{username}/{code}")]
         public JObject Verify(string username,int code)

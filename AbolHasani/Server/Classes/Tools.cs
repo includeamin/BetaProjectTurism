@@ -154,5 +154,24 @@ namespace Server.Classes
             Console.WriteLine("Done");
 
         }
+
+
+        public string HashUserPassWord(string passWord){
+
+
+            using(var sha256 = SHA256.Create())  
+            {  
+     
+                varhashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(passWord));  
+      
+                var hash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
+                Console.WriteLine(hash);  
+
+                return hash;
+       
+               
+            }  
+            
+        }
     }
 }
