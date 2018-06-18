@@ -150,12 +150,12 @@ namespace Server.Controllers
                 var mail = from["Mail"];
                 var phoneNumber = from["PhoneNumber"];
                 var passWord = from["PassWord"];
-
+                var Images = HttpContext.Request.Form.Files[0];
 
             
                     
-                    var users = Tools.Database.GetCollection<User>("users");
-                    var codes = Tools.Database.GetCollection<Verify>("Codes");
+                var users = Tools.Database.GetCollection<User>("users");
+                var codes = Tools.Database.GetCollection<Verify>("Codes");
                    if(users.Exists(u=>u.UserName.Equals(userName))){
                         Console.WriteLine($"username exist");
                        
@@ -172,6 +172,7 @@ namespace Server.Controllers
                             PassWord=passWord,
                             IsActive = false
                         });
+
                     if (codes.Exists(c => c.UserName.Equals(userName)))
                         {
                         codes.Delete(c => c.UserName.Equals(userName));
@@ -184,6 +185,8 @@ namespace Server.Controllers
                             Code = temp,
                             IsVerified = false
                         });
+                    Tools.SaveUserProfileImage(userName, Images);
+
 
                         jObject["Result"] = $"Registeration in success , code send to this mail {temp} - {mail}";
                         jObject["Code"] =1;

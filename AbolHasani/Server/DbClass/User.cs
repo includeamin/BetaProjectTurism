@@ -12,6 +12,7 @@ namespace Server
         public string PhoneNumebr { get; set; }
         public string PassWord { set; get; }
         public bool IsActive { set; get; }
+        public string UserImage { set; get; }
 
 
 

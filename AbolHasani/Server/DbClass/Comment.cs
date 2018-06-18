@@ -8,10 +8,9 @@ namespace Server.DbClass
     public class Comment
     {
         public int Id { get; set; }
-        public string LocationTitle { set; get; }
+        public string LocationId { set; get; }
         public string UserName { get; set; }
-      
-      
         public string Description { get; set; }
+        public string UserImage { set; get; }
     }
 }

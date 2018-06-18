@@ -32,7 +32,7 @@ namespace Server.Classes
         //Database collections name ====================================
         public static string DbName = "Hasani.db";
         public static string Locations = "Locations";
-        public static string Users = "Users";
+        public static string Users = "users";
         public static string Comments = "Comments";
 
 
@@ -115,8 +115,7 @@ namespace Server.Classes
             FileStream amin = new FileStream(filePath, System.IO.FileMode.OpenOrCreate);
 
             stream.CopyTo(amin);
-            //  using (var db = new LiteDatabase(_connectionString))
-            // {
+          
                 amin.Close();
                 Console.WriteLine(title);
                 var places = Database.GetCollection<Location>("Locations");
@@ -125,9 +124,35 @@ namespace Server.Classes
                 places.Update(place);
 
 
-          //  }
-
+       
          
+        }
+        /// <summary>
+        /// Saves the user profile image.
+        /// </summary>
+        /// <param name="username">Username.</param>
+        /// <param name="file">File.</param>
+
+        public static void SaveUserProfileImage(string username, Microsoft.AspNetCore.Http.IFormFile file){
+
+            var stream = file.OpenReadStream();
+
+
+            var temp = DateTime.Now.DayOfYear + DateTime.Now.Millisecond.ToString() + file.FileName;
+
+            var filePath = Path.Combine("./UploadedFiles", temp);
+
+            FileStream amin = new FileStream(filePath, System.IO.FileMode.OpenOrCreate);
+
+            stream.CopyTo(amin);
+            Console.WriteLine($"Upload  {username}'s profile pic {file.FileName}");
+            amin.Close();
+            var users = Database.GetCollection<User>("users");
+            var user = users.FindOne(u => u.UserName.Equals(username));
+            user.UserImage = temp;
+            users.Update(user);
+            Console.WriteLine("Done");
+
         }
     }
 }

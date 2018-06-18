@@ -16,9 +16,10 @@ namespace Server.Controllers
     {
         // GET: api/values
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Comment> Get()
         {
-            return new string[] { "value1", "value2" };
+         // Tools.Database.GetCollection<Comment>("Comments").Delete(a => a == a);
+            return Tools.Database.GetCollection<Comment>("Comments").FindAll();
         }
 
     
@@ -37,28 +38,28 @@ namespace Server.Controllers
             {
                 Console.WriteLine($"Get users comment faild :{ex.Message}");
                 return new Comment[]{
-                    new Comment(){LocationTitle=$"{ex.Message}"}
+                    new Comment(){LocationId=$"{ex.Message}"}
                 };
             }
         }
 
         [HttpGet]
-        [Route("locationcomment/{locationTitle}")]
+        [Route("locationcomment/{id}")]
         [ActionName("LocationComment")]
-        public IEnumerable<Comment> GetLocationComment(string locationTitle)
+        public IEnumerable<Comment> GetLocationComment(int id)
         {
            try
             {
                 var comments = Tools.Database.GetCollection<Comment>("Comments");
-                var LocationComment = comments.Find(lc => lc.LocationTitle.Equals(locationTitle));
-               
+                var location = Tools.Database.GetCollection<Location>("Locations").FindOne(i => i.Id.Equals(id));
+                var LocationComment = comments.Find(lc => lc.LocationId.Equals(location.Id.ToString()));
                 return LocationComment;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Get users comment faild :{ex.Message}");
                 return new Comment[]{
-                    new Comment(){LocationTitle=$"{ex.Message}"}
+                    new Comment(){LocationId=$"{ex.Message}"}
                 };
             }
         }
@@ -74,7 +75,7 @@ namespace Server.Controllers
 
                 var description = form["Description"];
                 var userName = form["UserName"];
-                var locationTitle = form["Title"];
+                var locationTitle = form["Id"];
 
 
 
@@ -94,12 +95,15 @@ namespace Server.Controllers
                     throw new Exception("Username not found for this username");
                 }
 
+                var tempUser = users.FindOne(u => u.UserName.Equals(userName));
+
                 var tempComment = new Comment()
                 {
 
                     UserName = userName,
                     Description = description,
-                    LocationTitle = locationTitle
+                    LocationId = locationTitle,
+                    UserImage = tempUser.UserImage
                 };
 
               comments.Insert(tempComment);
@@ -128,7 +132,7 @@ namespace Server.Controllers
            try
             {
                 var comments = Tools.Database.GetCollection<Comment>("Comments");
-                comments.Delete(c => c.UserName.Equals(username)&& c.LocationTitle.Equals(title));
+                comments.Delete(c => c.UserName.Equals(username)&& c.LocationId.Equals(title));
                 return Tools.Result(1, $"Comment deleted");
             }
             catch (Exception ex)
