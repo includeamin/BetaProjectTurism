@@ -7,7 +7,6 @@ using Server.Classes;
 using Server.DbClass;
 using Newtonsoft.Json.Linq;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Server.Controllers
 {
@@ -22,7 +21,6 @@ namespace Server.Controllers
             return Tools.Database.GetCollection<Comment>("Comments").FindAll();
         }
 
-    
         [HttpGet]
         [Route("usercomment/{username}")]
         [ActionName("GetUserComment")]

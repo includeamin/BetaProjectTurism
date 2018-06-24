@@ -8,7 +8,6 @@ using Newtonsoft.Json.Linq;
 using Server.Classes;
 using Server.DbClass;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Server.Controllers
 {
@@ -26,13 +25,9 @@ namespace Server.Controllers
         [HttpGet]
         public IEnumerable<User> Get()
         {
-            //using (var db = new LiteDatabase(Tools._connectionString))
-           // {
-
                 var users = Tools.Database.GetCollection<User>("Users");
                 var temp = users.FindAll();
                 return temp;
-            //}
         }
 
         // GET Login User with username password
@@ -43,19 +38,19 @@ namespace Server.Controllers
 
             try
             {
-                   
-              //  using (var db = new LiteDatabase(Tools._connectionString))
-              //  {
-                    
                 var users = Tools.Database.GetCollection<User>("Users");
                 if (users.Exists(u => u.UserName .Equals(username)))
                     {
                     var user = users.FindOne(u => u.UserName.Equals(username));
                         if (user.PassWord == password)
                         {
+                            
+
                             jObject["result"] = "User Login Success";
                             jObject["Code"] = 1;
                             return jObject;
+                      
+                            
                         }
                         else{
                             jObject["result"] = "User Login Faild : Password is Wrong";
@@ -70,7 +65,7 @@ namespace Server.Controllers
                         return jObject;
                     }
 
-             //   }
+       
             }
             catch (Exception ex)
             {
@@ -83,11 +78,17 @@ namespace Server.Controllers
         }
 
 
-
+        /// <summary>
+        /// Gets the user detail.
+        /// </summary>
+        /// <returns>The user detail.</returns>
+        /// <param name="userName">User name.</param>
+        /// <param name="passWord">Pass word.</param>
         [HttpGet]
         [Route("getDetail/{username}/{password}")]
         [ActionName("GetUserDetail")]
-        public User GetUserDetail(string userName , string passWord){
+        public User GetUserDetail(string userName , string passWord)
+        {
 
             try
             {
@@ -110,7 +111,12 @@ namespace Server.Controllers
 
             }
         }
-
+        /// <summary>
+        /// Verify the specified username and code.
+        /// </summary>
+        /// <returns>The verify.</returns>
+        /// <param name="username">Username.</param>
+        /// <param name="code">Code.</param>
         //[Route("Handmade/[controller]/Verify")]
         [HttpPost("{username}/{code}")]
         public JObject Verify(string username,int code)
@@ -119,8 +125,7 @@ namespace Server.Controllers
             try
             {
                 int temp;
-             //   using (var db = new LiteDatabase(Tools._connectionString))
-              //  {
+             
                     var codes = Tools.Database.GetCollection<Verify>("Codes");
                     var users = Tools.Database.GetCollection<User>("Users");
                     var tempcode = codes.FindOne(c => c.UserName == username);
@@ -154,8 +159,6 @@ namespace Server.Controllers
                         }
                     }
 
-              //  }
-
             }
             catch (Exception e)
             {
@@ -166,7 +169,10 @@ namespace Server.Controllers
 
             }
         }
-
+        /// <summary>
+        /// Post this instance.
+        /// </summary>
+        /// <returns>The post.</returns>
         // POST api/values
         [HttpPost]
         public JObject Post()
@@ -179,13 +185,14 @@ namespace Server.Controllers
                 var mail = from["Mail"];
                 var phoneNumber = from["PhoneNumber"];
                 var passWord = from["PassWord"];
-                var Images = HttpContext.Request.Form.Files[0];
+             //   var Images = HttpContext.Request.Form.Files[0]; this code for upload image form client
 
             
                     
                 var users = Tools.Database.GetCollection<User>("users");
                 var codes = Tools.Database.GetCollection<Verify>("Codes");
                    if(users.Exists(u=>u.UserName.Equals(userName))){
+                    
                         Console.WriteLine($"username exist");
                        
                         jObject["result"] = "UserName exist";
@@ -193,6 +200,9 @@ namespace Server.Controllers
                         return jObject;
                     }
                     else{
+                    Random random = new Random();
+                    int randomNumber = random.Next(0, 5);
+
                         users.Insert(new User()
                         {
                             UserName = userName,
@@ -200,6 +210,8 @@ namespace Server.Controllers
                             PhoneNumebr = phoneNumber,
                             PassWord=passWord,
                             IsActive = false
+                            ,
+                        UserImage = $"{randomNumber}.jpeg"
                         });
 
                     if (codes.Exists(c => c.UserName.Equals(userName)))
@@ -207,14 +219,16 @@ namespace Server.Controllers
                         codes.Delete(c => c.UserName.Equals(userName));
                             
                         }
-                        int temp = Tools.SendVerifingCodeViaMail(userName, mail);
+                    int temp =  Tools.SendVerifingCodeViaMail(userName, mail);
                         codes.Insert(new Verify()
                         {
                             UserName = userName,
                             Code = temp,
                             IsVerified = false
                         });
-                    Tools.SaveUserProfileImage(userName, Images);
+                 
+
+                   //    Tools.SaveUserProfileImage(userName, Images); this code for upload image from client
 
 
                         jObject["Result"] = $"Registeration in success , code send to this mail {temp} - {mail}";
@@ -256,6 +270,7 @@ namespace Server.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            
         }
     }
 }

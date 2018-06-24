@@ -25,13 +25,14 @@ namespace Server.Controllers
                 var username = form["UserName"];// should check thgis user in sexist or not
                 var ItemId = form["ItemId"]; // locations title
                 var Locations = Tools.Database.GetCollection<Location>("Locations");
-                var TempLocation = Locations.FindOne(l => l.Title.Equals((string)ItemId));
+                var TempLocation = Locations.FindOne(l => l.Id.Equals(Convert.ToInt32(ItemId)));
+          
 
              
 
 
 
-                if (TempLocation.UserLikedList.Exists(u=> u==username)) {
+                if (TempLocation.UserLikedList.Exists(u=> u.Equals(username))) {
                     
                    
                     TempLocation.LikesCount -= 1;

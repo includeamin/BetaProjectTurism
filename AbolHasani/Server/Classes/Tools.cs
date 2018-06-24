@@ -18,7 +18,7 @@ namespace Server.Classes
     {
 
         //URLS ========================================================
-        public readonly static string DownloadServerURl = "http://192.168.1.54:9001/";
+        public readonly static string DownloadServerURl = "http://192.168.1.52:9001/";
         public readonly static string MainServerURL = "http://[::]:9000/";
 
 
@@ -155,23 +155,26 @@ namespace Server.Classes
 
         }
 
-
-        public string HashUserPassWord(string passWord){
-
-
-            using(var sha256 = SHA256.Create())  
-            {  
+        /// <summary>
+        /// Hashs the user pass word.
+        /// </summary>
+        /// <returns>The user pass word.</returns>
+        /// <param name="passWord">Pass word.</param>
+   //     public string HashUserPassWord(string passWord)
+   //     { 
+     //       using(var sha256 = SHA256.Create())  
+     //       {  
      
-                varhashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(passWord));  
+    //            varhashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(passWord));  
       
-                var hash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
-                Console.WriteLine(hash);  
+     //           var hash = BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
 
-                return hash;
-       
-               
-            }  
+      //          Console.WriteLine(hash);  
+
+       //         return hash;
+                      
+      //      }  
             
-        }
+      //  }
     }
 }
