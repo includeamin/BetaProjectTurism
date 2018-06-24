@@ -28,7 +28,7 @@ namespace Server.Controllers
                 var TempLocation = Locations.FindOne(l => l.Id.Equals(Convert.ToInt32(ItemId)));
           
 
-             
+                Console.WriteLine(ItemId);
 
 
 
