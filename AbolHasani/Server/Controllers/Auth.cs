@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using LiteDB;
 using Newtonsoft.Json.Linq;
@@ -27,6 +25,7 @@ namespace Server.Controllers
         {
                 var users = Tools.Database.GetCollection<User>("Users");
                 var temp = users.FindAll();
+          
                 return temp;
         }
 

@@ -18,7 +18,7 @@ namespace Server.Classes
     {
 
         //URLS ========================================================
-        public readonly static string DownloadServerURl = "http://192.168.1.52:9001/";
+        public readonly static string DownloadServerURl = "http://178.63.169.234:9001/";
         public readonly static string MainServerURL = "http://[::]:9000/";
 
 
